@@ -98,16 +98,37 @@ export default function Game() {
             <audio ref={pointRef} src="assets/music/point.mp3"></audio>
             {game.status === 'NEW_GAME' && (
                 <>
-                    <img className='start-btn' src="assets/images/start-button.png" onClick={newGameHandler} alt="" />
+                    <img
+                        className="w-40 mx-auto cursor-pointer hover:scale-110 transition-transform duration-300"
+                        src="assets/images/start-button.png"
+                        onClick={newGameHandler}
+                        alt="Start Button"
+                    />
                     <Bird />
                 </>
             )
             }
             {game.status === 'GAME_OVER' && (
                 <>
-                    <img className='start-btn' src="assets/images/start-button.png" onClick={newGameHandler} alt="" />
-                    <h2 style={{ position: 'absolute', top: 100, left: 80 }}>Game Over</h2>
-                    <h2 style={{ position: 'absolute', top: 150, left: 140 }}>{game.score}</h2>
+                    <div className="relative flex flex-col items-center justify-center h-screen bg-black bg-opacity-50">
+                        {/* Start Button */}
+                        <img
+                            className="w-52 cursor-pointer hover:scale-110 transition-transform duration-300"
+                            src="assets/images/start-button.png"
+                            onClick={newGameHandler}
+                            alt="Start Button"
+                        />
+
+                        {/* Game Over Text */}
+                        <h2 className="absolute top-24 text-white text-2xl font-bold">
+                            Game Over
+                        </h2>
+
+                        {/* Score Display */}
+                        <h2 className="absolute top-36 text-yellow-400 text-xl font-semibold">
+                            {game.score}
+                        </h2>
+                    </div>
                 </>
             )
             }
