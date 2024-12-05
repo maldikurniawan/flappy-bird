@@ -12,7 +12,7 @@
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #d8dee8;
+    background: linear-gradient(to bottom, #008894, #33C58E, #63FD88);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,9 +39,8 @@ h1 {
     position: relative;
     width: 288px;
     height: 512px;
-    background-image: url('../public/assets/images/background-night.png');
+    background-image: url('../assets/images/background-night.png');
     overflow: hidden;
-    border: 2px solid #ccc;
     border-radius: 8px;
 }
 
@@ -63,7 +62,7 @@ h1 {
     position: absolute;
     top: 0;
     width: 52px;
-    background-image: url('../public/assets/images/pipe-top.png');
+    background-image: url('../assets/images/pipe-top.png');
     background-position: bottom;
     transition: 0.7s;
     height: 200px;
@@ -73,9 +72,8 @@ h1 {
     position: absolute;
     height: 200px;
     top: 300px;
-
     width: 52px;
-    background-image: url('../public/assets/images/pipe-bottom.png');
+    background-image: url('../assets/images/pipe-bottom.png');
     transition: 0.7s;
 }
 
@@ -85,8 +83,7 @@ h1 {
     width: 288px;
     height: 100px;
     background-color: yellow;
-    background-image: url('../public/assets/images/foreground.png');
-
+    background-image: url('../assets/images/foreground.png');
 }
 
 .start-btn {

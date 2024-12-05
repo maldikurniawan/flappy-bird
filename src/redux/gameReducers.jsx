@@ -1,32 +1,43 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
+
+const getHighScoreFromLocalStorage = () => {
+    const savedScore = localStorage.getItem("highScore");
+    return savedScore ? parseInt(savedScore, 10) : 0;
+};
 
 const initialState = {
     game: {
-        status: 'NEW_GAME',
-        score: 0
+        status: "NEW_GAME",
+        score: 0,
+        highScore: getHighScoreFromLocalStorage(),
     },
-}
+};
 
 export const gameSlice = createSlice({
     name: "game",
     initialState,
     reducers: {
-        start: (state, action) => {
-            state.game.status = 'PLAYING'
-            state.game.score = 0
+        start: (state) => {
+            state.game.status = "PLAYING";
+            state.game.score = 0;
         },
-        gameOver: (state, action) => {
-            state.game.status = 'GAME_OVER'
+        gameOver: (state) => {
+            state.game.status = "GAME_OVER";
+            // Update high score if the current score is higher
+            if (state.game.score > state.game.highScore) {
+                state.game.highScore = state.game.score;
+                localStorage.setItem("highScore", state.game.highScore);
+            }
         },
-        newGame: (state, action) => {
-            state.game.status = 'NEW_GAME',
-                state.game.score = 0
+        newGame: (state) => {
+            state.game.status = "NEW_GAME";
+            state.game.score = 0;
         },
-        addScore: (state, action) => {
-            state.game.score += 1
-        }
-    }
-})
+        addScore: (state) => {
+            state.game.score += 1;
+        },
+    },
+});
 
-export const { start, gameOver, newGame, updatePipe, addScore } = gameSlice.actions
-export default gameSlice.reducer
+export const { start, gameOver, newGame, addScore } = gameSlice.actions;
+export default gameSlice.reducer;
