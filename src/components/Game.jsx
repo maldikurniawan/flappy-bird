@@ -18,6 +18,7 @@ export default function Game() {
     const wingRef = useRef(null);
     const hitRef = useRef(null);
     const pointRef = useRef(null);
+    const backgroundMusicRef = useRef(null);
 
     function startGameLoop() {
         gameLoop = setInterval(() => {
@@ -40,17 +41,21 @@ export default function Game() {
     const handleClick = () => {
         if (game.status === "PLAYING") {
             dispatch(fly());
+            wingRef.current.play();
         }
     };
 
     const newGameHandler = () => {
         startGameLoop();
         dispatch(start());
+        backgroundMusicRef.current.play(); // Start playing background music
     };
 
     useEffect(() => {
         if (game.status === "GAME_OVER") {
             stopGameLoop();
+            backgroundMusicRef.current.pause(); // Stop background music
+            backgroundMusicRef.current.currentTime = 0; // Reset the music
         } else {
             const x = startPosition.x;
             const challenge = pipes
@@ -82,12 +87,23 @@ export default function Game() {
                 }
             }
         }
-    }, [startPosition.x]);
+    }, [game.status, startPosition.x]);
+
+    useEffect(() => {
+        return () => {
+            // Cleanup: stop music when component unmounts
+            backgroundMusicRef.current.pause();
+            backgroundMusicRef.current.currentTime = 0;
+        };
+    }, []);
 
     return (
         <div className="game-div" onClick={handleClick}>
+            <audio ref={backgroundMusicRef} src="assets/music/sound.mp3" loop></audio>
             <audio ref={hitRef} src="assets/music/hit.mp3"></audio>
             <audio ref={pointRef} src="assets/music/point.mp3"></audio>
+            <audio ref={wingRef} src="assets/music/wing.mp3"></audio>
+
             {game.status === "NEW_GAME" && (
                 <>
                     <img
@@ -132,11 +148,15 @@ export default function Game() {
             )}
             {game.status === "PLAYING" && (
                 <>
-                    <audio ref={wingRef} src="assets/music/wing.mp3"></audio>
                     <Bird />
                     <Pipe />
                     <ForeGround />
-                    <h2 className="text-white font-bold text-xl" style={{ position: 'absolute', top: 50, left: 150 }}>{game.score}</h2>
+                    <h2
+                        className="text-white font-bold text-xl"
+                        style={{ position: "absolute", top: 50, left: 150 }}
+                    >
+                        {game.score}
+                    </h2>
                 </>
             )}
         </div>
