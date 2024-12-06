@@ -67,7 +67,7 @@ export default function Game() {
             stopGameLoop();
             backgroundMusicRef.current.pause(); // Stop background music
             backgroundMusicRef.current.currentTime = 0; // Reset the music
-        } else if (game.score === 50 && !hasEasterEggOccurred) {
+        } else if (game.score === 20 && !hasEasterEggOccurred) {
             setIsEasterEgg(true);
             setHasEasterEggOccurred(true); // Set the flag to true after Easter egg occurs
             stopGameLoop();
