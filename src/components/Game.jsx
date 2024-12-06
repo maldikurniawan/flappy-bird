@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Bird from "./Bird";
 import ForeGround from "./ForeGround";
 import Pipe from "./Pipe";
@@ -16,9 +16,12 @@ export default function Game() {
     const { bird } = useSelector((state) => state.bird);
     const { pipes, startPosition } = useSelector((state) => state.pipe);
     const wingRef = useRef(null);
+    const scareRef = useRef(null);
     const hitRef = useRef(null);
     const pointRef = useRef(null);
     const backgroundMusicRef = useRef(null);
+    const [isEasterEgg, setIsEasterEgg] = useState(false);
+    const [hasEasterEggOccurred, setHasEasterEggOccurred] = useState(false); // Track if the Easter egg has occurred
 
     function startGameLoop() {
         gameLoop = setInterval(() => {
@@ -39,16 +42,24 @@ export default function Game() {
     }
 
     const handleClick = () => {
-        if (game.status === "PLAYING") {
+        if (game.status === "PLAYING" && !isEasterEgg) {
             dispatch(fly());
             wingRef.current.play();
         }
     };
 
     const newGameHandler = () => {
+        setIsEasterEgg(false);
+        setHasEasterEggOccurred(false); // Reset Easter egg flag when starting a new game
         startGameLoop();
         dispatch(start());
         backgroundMusicRef.current.play(); // Start playing background music
+    };
+
+    const resumeGameHandler = () => {
+        setIsEasterEgg(false);
+        startGameLoop();
+        backgroundMusicRef.current.play();
     };
 
     useEffect(() => {
@@ -56,6 +67,11 @@ export default function Game() {
             stopGameLoop();
             backgroundMusicRef.current.pause(); // Stop background music
             backgroundMusicRef.current.currentTime = 0; // Reset the music
+        } else if (game.score === 50 && !hasEasterEggOccurred) {
+            setIsEasterEgg(true);
+            setHasEasterEggOccurred(true); // Set the flag to true after Easter egg occurs
+            stopGameLoop();
+            backgroundMusicRef.current.pause();
         } else {
             const x = startPosition.x;
             const challenge = pipes
@@ -87,7 +103,7 @@ export default function Game() {
                 }
             }
         }
-    }, [game.status, startPosition.x]);
+    }, [game.status, game.score, startPosition.x, hasEasterEggOccurred]);
 
     useEffect(() => {
         return () => {
@@ -97,12 +113,35 @@ export default function Game() {
         };
     }, []);
 
+    useEffect(() => {
+        if (isEasterEgg && scareRef.current) {
+            scareRef.current.play(); // Play sound when the Easter egg is triggered
+        }
+    }, [isEasterEgg]);
+
     return (
         <div className="game-div" onClick={handleClick}>
             <audio ref={backgroundMusicRef} src="assets/music/sound.mp3" loop></audio>
             <audio ref={hitRef} src="assets/music/hit.mp3"></audio>
             <audio ref={pointRef} src="assets/music/point.mp3"></audio>
             <audio ref={wingRef} src="assets/music/wing.mp3"></audio>
+
+            {isEasterEgg && (
+                <div className="easter-egg-overlay flex flex-col items-center justify-center bg-black bg-opacity-75 fixed top-0 left-0 w-full h-full">
+                    <audio ref={scareRef} src="assets/music/jumpscare.mp3"></audio>
+                    <img
+                        src="assets/images/ghost.png"
+                        alt="Ghost"
+                        className="w-40 mb-4"
+                    />
+                    <button
+                        className="bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200"
+                        onClick={resumeGameHandler}
+                    >
+                        Continue
+                    </button>
+                </div>
+            )}
 
             {game.status === "NEW_GAME" && (
                 <>
@@ -146,7 +185,7 @@ export default function Game() {
                     </div>
                 </>
             )}
-            {game.status === "PLAYING" && (
+            {game.status === "PLAYING" && !isEasterEgg && (
                 <>
                     <Bird />
                     <Pipe />
