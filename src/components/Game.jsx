@@ -132,7 +132,7 @@ export default function Game() {
                     <img
                         src="assets/images/ghost.png"
                         alt="Ghost"
-                        className="w-40 mb-4"
+                        className="w-full mb-4"
                     />
                     <button
                         className="bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200"
