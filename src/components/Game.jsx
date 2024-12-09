@@ -172,13 +172,13 @@ export default function Game() {
                         >
                             {/* Your Score */}
                             <div className="flex-1 text-center">
-                                <h2 className="text-white text-lg font-semibold">Your Score:</h2>
+                                <h2 className="text-white text-sm font-semibold">Your Score:</h2>
                                 <span className="text-yellow-300 text-2xl font-bold">{game.score}</span>
                             </div>
 
                             {/* High Score */}
                             <div className="flex-1 text-center">
-                                <h2 className="text-white text-lg font-semibold">High Score:</h2>
+                                <h2 className="text-white text-sm font-semibold">High Score:</h2>
                                 <span className="text-orange-300 text-2xl font-bold">{game.highScore}</span>
                             </div>
                         </div>
